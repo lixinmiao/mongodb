@@ -1,0 +1,45 @@
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script language="javascript">
+	
+	var p = 0;
+	var page = {'page':p,'pageSize':30};
+	var isPage = false;//是否可以分页 
+	
+	function myAjax(){
+		
+				$.ajax( {
+					url : 'http://localhost/testmongo/getUsersForSpring2.json',    
+					data : page,
+					dataType : 'json',
+					success : function(data) {
+						var person = eval(data);
+						if(person.users.length>0){
+							isPage=true;
+							var htmldiv = '<table border="1" bordercolor="#cccccc" bgcolor="#ccddde">';
+								htmldiv += '<tr><td>id</td><td>name</td><td>score</td><td>msg</td></tr>';	
+							$.each(person.users, function(i, o) {
+								htmldiv += '<tr><td>'+o.id+'</td><td>'+o.name+'</td><td>'+o.score+'</td><td>'+o.message+'</td></tr>';	
+							});
+								htmldiv += '</table>';
+								htmldiv += '<input border=0 type="button" value="nextPage" onclick="changePage();"/>';
+							$('#main').html(htmldiv);
+						}else
+							isPage = false;
+					}
+				});
+	}
+	
+	$(document).ready(function() {
+		myAjax();
+	})
+	
+	function changePage(){
+		if(isPage){
+			page.page=p+30;
+			p=page.page;
+			myAjax();
+		}
+	}	
+</script>
+<div id="main">
+</div>
